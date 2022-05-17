@@ -44,7 +44,7 @@ export default function App() {
 
   return (
     <>
-      <TitleForm>Phonebook</TitleForm>
+      <TitleForm>Phonebook- HW-8</TitleForm>
       <ContactForm onSubmit={formSubmitHandler} adding={isAdding}/>
 
       <TitleContacts>Contacts</TitleContacts>
