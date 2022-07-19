@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import { Formik, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
@@ -9,7 +7,7 @@ import {
 } from 'redux/contactsApi';
 
 import { Button } from 'components/Button/Button';
-import { FormStyled, LabelStyled, Input, InputWrapper, BtnForm, Message } from "./ContactFormStyled";
+import { FormStyled, LabelStyled, Input, InputWrapper, Message } from "./ContactFormStyled";
 
 
 import 'yup-phone';
