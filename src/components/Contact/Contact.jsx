@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useDeleteContactMutation } from "redux/contactsSlice";
+import { useDeleteContactMutation } from "redux/contactsApi";
 import { ContactItem, ContactName, ContactNumber, BtnDelete } from "./Contact.styled";
 
 export default function Contact({ name, phone, idContact }) {

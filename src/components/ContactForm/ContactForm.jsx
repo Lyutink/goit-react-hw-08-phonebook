@@ -1,55 +1,110 @@
-//import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { Formik, Field, Form, ErrorMessage } from "formik";
+import { useState } from 'react';
+
+import { Formik, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
-import { ContainerForm, LabelForm, BtnForm } from "./ContactForm.styled";
+import {
+  useFetchContactsQuery,
+  useCreateContactMutation,
+} from 'redux/contactsApi';
 
-const validationSchema = Yup.object({
-  name: Yup.string()
-    .matches(
-      /^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$/,
-      `Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan`
-    )
-    .required("Please enter your name, it is required"),
-  number: Yup.string()
-    .matches(
-      /\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/,
-      "Phone number must be digits (at least 5 symbols long), it can contain spaces, dashes, parentheses and can start with +"
-    )
-    .required("Please enter your phone number, it is required"),
+import { Button } from 'components/Button/Button';
+import { FormStyled, LabelStyled, Input, InputWrapper, BtnForm, Message } from "./ContactFormStyled";
+
+
+import 'yup-phone';
+
+const validationSchema = Yup.object().shape({
+  name: Yup.string().required().min(2).max(20),
+  number: Yup.string().phone().required('A phone number is required'),
 });
-///////////////////////////////////
-export default function ContactForm({ onSubmit, adding }) {
+
+const FormError = ({ name }) => {
+  return (
+    <ErrorMessage
+      name={name}
+      render={message => <Message>{message}</Message>}
+    />
+  );
+}; 
+const initialValues = {
+  name: '',
+  number: '',
+  filter: '',
+};
+export const ContactForm = () => {
+ 
+  // const adding = false;
+//const [addContact, { isAddin: isAdding }] = useCreateContactMutation();
+  const [addContact] = useCreateContactMutation();
+  const { data: contacts } = useFetchContactsQuery();
+  
+
+  // const checkContact = name => {
+  //   const normilizedName = name.toLowerCase();
+  //   const nameChecked = contact =>
+  //     normilizedName === contact.name.toLowerCase();
+
+  //   return !nameChecked;
+  // };
+
+  const formSubmitHandler = async ({ name, number }, { resetForm }) => {
+    const contactObj = { name, number };
+
+    const isNameInContacts = contacts?.find(
+      contact => contact.name.toLowerCase() === name.toLowerCase()
+    );
+
+    if (isNameInContacts) {
+      alert(`${name} is already in contacts`);
+      return;
+    }
+    await addContact(contactObj);
+    resetForm();
+  };
+
+  // const getContactList = () => {
+  //   const normilizedFilter = filter.toLocaleLowerCase();
+  //   return contacts.filter(contact =>
+  //     contact.name.toLocaleLowerCase().includes(normilizedFilter)
+  //   );
+  // };
+
+  // const changeFilter = event => {
+  //   setFilter(event.target.value);
+  // };
+  /////////////////////////////////////////////////////
   return (
     <Formik
-      enableReinitialize
-      initialValues={{ name: "", phone: "" }}
+      initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={(values,{ resetForm}) => {
-        onSubmit(values);
-        resetForm(); 
-      }}
+      onSubmit={formSubmitHandler}
+      // onSubmit={(values,{ resetForm}) => {
+      //   onSubmit(values);
+      //   resetForm(); 
+      // }}
     >
-      <Form autoComplete="off" >
-        <ContainerForm>
-          <LabelForm htmlFor="name">Name</LabelForm>
-          <Field type="text" name="name" />
-          <ErrorMessage name="name" />
-
-          <LabelForm htmlFor="phone">Phone</LabelForm>
-          <Field type="tel" name="phone" />
-          <ErrorMessage name="phone" />
-
-          <BtnForm type="submit">
-            {adding ? "Adding..." : "Add contact"}
-          </BtnForm>
-        </ContainerForm>
-      </Form>
+      <FormStyled autoComplete="off">
+        <InputWrapper>
+          <LabelStyled htmlFor="name">Name</LabelStyled>
+          <div>
+            <Input name="name" type="text" />
+            <FormError name="name" />
+          </div>
+        </InputWrapper>
+        <InputWrapper>
+          <LabelStyled htmlFor="number">Phone</LabelStyled>
+          <div>
+            <Input name="number" type="tel" />
+            <FormError name="number" />
+          </div>
+        </InputWrapper>
+        <Button type="submit" text={'Add contact'} />
+      </FormStyled>
     </Formik>
   );
 }
 
-ContactForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
-};
+// ContactForm.propTypes = {
+//   onSubmit: PropTypes.func.isRequired,
+// };

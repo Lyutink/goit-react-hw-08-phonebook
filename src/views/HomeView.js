@@ -1,29 +1,24 @@
-import React from 'react';
-
-const styles = {
-  container: {
-    minHeight: 'calc(100vh - 50px)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontWeight: 500,
-    fontSize: 48,
-    textAlign: 'center',
-  },
-};
+import { HeroTitle, SubTitle, Container, Section } from 'components/AppStyled';
 
 export const HomeView = () => (
-  <div style={styles.container}>
-    <h1 style={styles.title}>
-      Приветственная страница нашего сервиса{' '}
-      <span role="img" aria-label="Иконка приветствия">
-        💁‍♀️
-      </span>
-    </h1>
-  </div>
+  <Section>
+    <Container>
+      <HeroTitle>Welcome to Phonebook App</HeroTitle>
+      <SubTitle>Please process the registration or login</SubTitle>
+    </Container>
+  </Section>
 );
+
+// export const HomeView = () => (
+//   <div style={styles.container}>
+//     <h1 style={styles.title}>
+//       Welcome page of our service{' '}
+//       <span role="img" aria-label="Иконка приветствия">
+//         💁‍♀️
+//       </span>
+//     </h1>
+//   </div>
+// );
 
 // import React from 'react';
 // import { LinkContainer } from 'react-router-bootstrap';

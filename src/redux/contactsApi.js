@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const contactsApi = createApi({
-  reducerPath: 'contactsApi',
+  reducerPath: 'contacts',
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://connections-api.herokuapp.com',
     prepareHeaders: (headers, { getState }) => {
@@ -12,12 +12,12 @@ export const contactsApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ['contact'],
+  // tagTypes: ['contact'],
   endpoints: builder => ({
     fetchContacts: builder.query({
       query: () => `/contacts`,
       keepUnusedDataFor: 0,
-      providesTags: ['contact'],
+      providesTags: ['Contact'],
     }),
     createContact: builder.mutation({
       query: newContact => ({
@@ -25,7 +25,7 @@ export const contactsApi = createApi({
         method: 'POST',
         body: newContact,
       }),
-      invalidatesTags: ['contact'],
+      invalidatesTags: ['Contact'],
     }),
     deleteContact: builder.mutation({
       query: contactId => ({
@@ -40,7 +40,7 @@ export const contactsApi = createApi({
         method: 'PATCH',
         body: changes,
       }),
-      invalidatesTags: ['contact'],
+      // invalidatesTags: ['contact'],
     }),
   }),
 });

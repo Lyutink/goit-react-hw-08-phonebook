@@ -1,77 +1,59 @@
-import { useState } from 'react';
+import { Formik } from 'formik';
 import { useDispatch } from 'react-redux';
-import { authOperations } from '../redux/auth';
+import { Button } from 'components/Button/Button';
+import { Title } from 'components/AppStyled';
+import {
+  FormStyled,
+  Input,
+  LabelStyled,
+  InputWrapper,
+} from 'components/ContactForm/ContactFormStyled';
+import { authOperations } from '../redux/auth/auth-operations';
+import { Container, Section } from 'components/AppStyled';
 
-const styles = {
-  form: {
-    width: 320,
-  },
-  label: {
-    display: 'flex',
-    flexDirection: 'column',
-    marginBottom: 15,
-  },
+const initialValues = {
+  name: '',
+  email: '',
+  password: '',
 };
 
 export const RegisterView = () => {
   const dispatch = useDispatch();
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
 
-  const handleChange = ({ target: { name, value } }) => {
-    switch (name) {
-      case 'name':
-        return setName(value);
-      case 'email':
-        return setEmail(value);
-      case 'password':
-        return setPassword(value);
-      default:
-        return;
-    }
-  };
-
-  const handleSubmit = e => {
-    e.preventDefault();
-    dispatch(authOperations.register({ name, email, password }));
-    setName('');
-    setEmail('');
-    setPassword('');
+  const handleSubmit = async ({ name, email, password }, { resetForm }) => {
+    const registerObj = { name, email, password };
+    dispatch(authOperations.register(registerObj));
+    resetForm();
   };
 
   return (
-    <div>
-      <h1>Страница регистрации</h1>
-
-      <form onSubmit={handleSubmit} style={styles.form} autoComplete="off">
-        <label style={styles.label}>
-          Имя
-          <input type="text" name="name" value={name} onChange={handleChange} />
-        </label>
-
-        <label style={styles.label}>
-          Почта
-          <input
-            type="email"
-            name="email"
-            value={email}
-            onChange={handleChange}
-          />
-        </label>
-
-        <label style={styles.label}>
-          Пароль
-          <input
-            type="password"
-            name="password"
-            value={password}
-            onChange={handleChange}
-          />
-        </label>
-
-        <button type="submit">Зарегистрироваться</button>
-      </form>
-    </div>
+    <Section>
+      <Container>
+        <Title>Registration Page</Title>
+        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+          <FormStyled autoComplete="off">
+            <InputWrapper>
+              <LabelStyled htmlFor="name">Name</LabelStyled>
+              <div>
+                <Input name="name" type="text" required />
+              </div>
+            </InputWrapper>
+            <InputWrapper>
+              <LabelStyled htmlFor="email">Email</LabelStyled>
+              <div>
+                <Input name="email" type="email" required />
+              </div>
+            </InputWrapper>
+            <InputWrapper>
+              <LabelStyled htmlFor="password">Password</LabelStyled>
+              <div>
+                <Input name="password" type="password" required />
+              </div>
+            </InputWrapper>
+            <Button type="submit" text={'Confirm'} />
+          </FormStyled>
+        </Formik>
+      </Container>
+    </Section>
   );
 };
